@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.slq.dao.TeacherMapper">
+    <!--
+    思路:
+        1. 从学生表和老师表中查出学生id，学生姓名，老师姓名
+        2. 对查询出来的操作做结果集映射
+            1. 集合的话，使用collection！
+                property:属性名
+                JavaType是用来指定pojo中属性的类型（当前Teacher属性值的类型：List<Student> students
+                ofType指 javaType泛型的类型
+                select 设置id，关联子查询
+                column 用来给下面子查询传输查询关键字：#{id}  -->
+    <!--方法一：子查询-->
+    <!--先查老师   resultMap设置id，关联resultMap-->
+<!--    <select id="getTeacherById" resultMap="TeacherStudent">-->
+<!--        select * from teacher where id=#{tid}-->
+<!--    </select>-->
+
+<!--    <resultMap id="TeacherStudent" type="Teacher">-->
+<!--        <result property="id" column="id"/>-->
+<!--        <collection property="students" javaType="ArrayList" ofType="Student" select="getStudentByTeacherId" column="id"/>-->
+<!--    </resultMap>-->
+
+<!--    <select id="getStudentByTeacherId" resultType="Student">-->
+<!--        select * from student where tid = #{id}-->
+<!--    </select>-->
+
+    <!--方法二：根据结果查询
+    t.id = #{id}是指按照id查询老师
+    -->
+    <select id="getTeacherById2" resultMap="TeacherStudent2">
+        select t.id tid, t.name tname, s.id sid, s.name sname
+        from student s, teacher t
+        where s.tid = t.id and t.id = #{tid}
+    </select>
+
+    <resultMap id="TeacherStudent2" type="Teacher">
+        <result property="id" column="tid"/>
+        <result property="name" column="tname"/>
+        <collection property="students" ofType="Student">
+            <result property="id" column="sid" />
+            <result property="name" column="sname" />
+            <result property="tid" column="tid" />
+        </collection>
+    </resultMap>
+
+
+
+
+
+</mapper>

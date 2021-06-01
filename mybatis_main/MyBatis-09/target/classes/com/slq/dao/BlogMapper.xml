@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.slq.dao.BlogMapper">
+<!--    blog（写sql中字段名）
+        values（中写#{属性名}，#{}都是传输属性的）
+-->
+
+
+    <insert id="addBlog" parameterType="blog">
+        insert into mybatis.blog (id, title, author, creat_time, views)
+        values (#{id},#{title},#{author},#{creatTime},#{views});
+    </insert>
+
+
+    <!--需求1：
+    根据作者名字和博客名字来查询博客！
+    如果作者名字为空，那么只根据博客名字查询，反之，则根据作者名来查询
+    select * from blog where title = #{title} and author = #{author}
+    将上面的sql语句拆成：
+    <if test="xx != null">
+        xx = #{xxx}
+    </if>
+    多个if在赋值语句前加 and
+    where 1=1 默认全部查询，if为后缀语句
+    -->
+    <select id="getBlogIf" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <if test="title != null">
+                title = #{title}
+            </if>
+            <if test="author != null">
+                and author = #{author}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getBlogChoose" parameterType="map" resultType="blog">
+        select *from blog
+        <where>
+            <choose>
+                <when test="title != null">
+                    title = #{title}
+                </when>
+                <when test="author != null">
+                    and author = #{author}
+                </when>
+                <otherwise>
+                    and views = #{views}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+</mapper>

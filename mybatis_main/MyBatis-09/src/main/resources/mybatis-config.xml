@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--    外部配置文件-->
+    <properties resource="db.properties"/>
+    <settings>
+        <setting name="logImpl" value="Log4j"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!--    设置别名
+            同时设置package和typeAlias，两个alias同时起作用
+    -->
+    <typeAliases>
+        <package name="com.slq.pojo"/>
+    </typeAliases>
+<!--    mybatis可以有多套环境，用default切换id名字来切换环境-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+<!--    所有的mapper配置文件都应该在mybatis配置文件中声明-->
+<!--    地址，用/表示！-->
+    <mappers>
+        <mapper resource="com/slq/dao/BlogMapper.xml"/>
+    </mappers>
+
+
+</configuration>

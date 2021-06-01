@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--接口实现类由原来的UserDaoImpl 转换为Mapper配置文件-->
+<!--namespace 添加一个Mapper接口地址-->
+<mapper namespace="com.slq.dao.UserMapper" >
+<!--    查询  id接口对应的方法名字, resultType使用全限定名，这里是别名-->
+    <select id="selectUser" resultType="username">
+        SELECT * FROM USER
+    </select>
+    <resultMap id="UserMap" type="User">
+        <!-- column是数据库表的列名 , property是对应实体类的属性名 -->
+<!--        <result column="id" property="id"/>-->
+<!--        <result column="name" property="name"/>-->
+        <result column="pwd" property="password"/>
+    </resultMap>
+<!--    根据id查询用户信息-->
+    <select id="getUserById" parameterType="int" resultMap="UserMap">
+        select * from mybatis.user where id = #{id}
+    </select>
+
+<!--    插入用户信息,使用自己创建的type需要些全限定名！-->
+    <insert id="insertUser" parameterType="com.slq.pojo.User">
+        insert into mybatis.user (id, name, pwd) values (#{id}, #{name}, #{pwd});
+    </insert>
+    
+    <update id="updateUser" parameterType="com.slq.pojo.User">
+        update mybatis.user set id = #{id}, name = #{name}  where id = #{id};
+    </update>
+
+    <delete id="deleteUser" parameterType="com.slq.pojo.User">
+        delete from mybatis.user where id = #{id};
+    </delete>
+
+    <update id="updateUser2" parameterType="map">
+        update mybatis.user set pwd = #{mappwd}, name = #{mapname} where id = #{mapid};
+    </update>
+</mapper>
